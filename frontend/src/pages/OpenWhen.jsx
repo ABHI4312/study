@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { openWhenAPI } from '../services/api';
 import Loading from '../components/Loading';
+import { FaPlus } from 'react-icons/fa';
 
 const OpenWhen = () => {
+  const navigate = useNavigate();
   const [letters, setLetters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedLetter, setSelectedLetter] = useState(null);
@@ -89,9 +92,19 @@ const OpenWhen = () => {
           <h1 className="text-5xl md:text-6xl font-romantic font-bold mb-4 bg-gradient-to-r from-romantic-400 to-purple-400 bg-clip-text text-transparent">
             Open When... 💌
           </h1>
-          <p className="text-gray-400 text-lg">
+          <p className="text-gray-400 text-lg mb-6">
             Letters for different moments in your life
           </p>
+          
+          {/* Create New Letter Button */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate('/add-open-when')}
+            className="btn-primary inline-flex items-center gap-2 px-8 py-3 text-lg"
+          >
+            <FaPlus /> Create New Letter
+          </motion.button>
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

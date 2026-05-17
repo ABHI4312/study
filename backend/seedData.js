@@ -85,6 +85,66 @@ const sampleOpenWhens = [
     condition: 'you can\'t sleep',
     emoji: '🌙',
   },
+  {
+    title: 'Open When You Need a Laugh',
+    message: 'Remember that time we laughed so hard we couldn\'t breathe? Your laugh is my favorite sound in the world. Here\'s a reminder: You\'re amazing, you\'re loved, and you make my life so much brighter. Keep smiling, beautiful! 😄💖',
+    condition: 'you need a laugh',
+    emoji: '😄',
+  },
+  {
+    title: 'Open When You\'re Stressed',
+    message: 'Take a deep breath. Everything will work out. You\'re doing amazing, even when it doesn\'t feel like it. Remember, I\'m here for you always. Let\'s tackle this together. You\'ve got this, and I\'ve got you. 🌸💆',
+    condition: 'you\'re stressed',
+    emoji: '😰',
+  },
+  {
+    title: 'Open When You Need Courage',
+    message: 'You are brave. You are strong. You can do hard things. I\'ve seen you overcome so much, and I know you\'ll conquer this too. I believe in you more than you know. Go be the amazing person you are! 🦁✨',
+    condition: 'you need courage',
+    emoji: '🦁',
+  },
+  {
+    title: 'Open When It\'s Our Anniversary',
+    message: 'Happy Anniversary, my love! Every moment with you has been a blessing. Thank you for being my partner, my best friend, my everything. Here\'s to many more years of love, laughter, and adventures together. I love you more each day! 🎊💑',
+    condition: 'it\'s our anniversary',
+    emoji: '🎊',
+  },
+  {
+    title: 'Open When You\'re Lonely',
+    message: 'You\'re never alone, my darling. I\'m always with you in spirit, thinking of you, loving you. Close your eyes and feel my presence. We\'re connected by something stronger than distance - our love. I\'ll be with you soon. 💝🤗',
+    condition: 'you\'re lonely',
+    emoji: '🤗',
+  },
+  {
+    title: 'Open When You Need Comfort',
+    message: 'Come here, let me hold you. Everything will be alright. You\'re safe, you\'re loved, you\'re cherished. Whatever you\'re going through, we\'ll face it together. Lean on me, I\'m here. Always. 🫂💕',
+    condition: 'you need comfort',
+    emoji: '🫂',
+  },
+  {
+    title: 'Open When You\'re Proud of Yourself',
+    message: 'I\'m so proud of you! Look at everything you\'ve accomplished! You\'re incredible, and I\'m so lucky to be with someone as amazing as you. Celebrate yourself today - you deserve it! 🏆🎉',
+    condition: 'you\'re proud',
+    emoji: '🏆',
+  },
+  {
+    title: 'Open When You\'re Having a Bad Day',
+    message: 'Bad days happen, but they don\'t last forever. Tomorrow is a new day, full of new possibilities. For now, be gentle with yourself. You\'re doing the best you can, and that\'s more than enough. I love you. 🌈💖',
+    condition: 'you\'re having a bad day',
+    emoji: '☁️',
+  },
+  {
+    title: 'Open When You Need Hope',
+    message: 'There\'s always hope, my love. Even in the darkest times, there\'s a light waiting to shine. You\'re stronger than any challenge you face. Better days are coming. Hold on, keep going. I\'m right here with you. 🌟💫',
+    condition: 'you need hope',
+    emoji: '🌟',
+  },
+  {
+    title: 'Open When You\'re Grateful',
+    message: 'I\'m grateful for you too! Thank you for being you, for loving me, for making every day brighter. You\'re the best thing that ever happened to me. Let\'s count our blessings together. 🙏💝',
+    condition: 'you\'re grateful',
+    emoji: '🙏',
+  },
 ];
 
 const sampleSecrets = [

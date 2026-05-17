@@ -18,6 +18,7 @@ import SecretDashboard from './pages/SecretDashboard';
 import SurpriseMessages from './pages/SurpriseMessages';
 import AddSurprise from './pages/AddSurprise';
 import ChooseMusic from './pages/ChooseMusic';
+import AddOpenWhen from './pages/AddOpenWhen';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -53,6 +54,7 @@ function App() {
                 <Route path="/memories" element={<MemoryTimeline />} />
                 <Route path="/memory/:id" element={<MemoryDetail />} />
                 <Route path="/open-when" element={<OpenWhen />} />
+                <Route path="/add-open-when" element={<AddOpenWhen />} />
                 <Route path="/secrets" element={<SecretMessage />} />
                 <Route path="/add-memory" element={<AddMemory />} />
                 <Route path="/surprises" element={<SurpriseMessages />} />
