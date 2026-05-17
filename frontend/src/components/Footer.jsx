@@ -13,7 +13,7 @@ const Footer = () => {
             className="text-center"
           >
             <h3 className="text-2xl font-romantic font-bold bg-gradient-to-r from-romantic-400 to-romantic-600 bg-clip-text text-transparent mb-2">
-              Our Little Universe ❤️
+              Our Little Universe ❤️❤️
             </h3>
             <p className="text-gray-400 text-sm">
               Where every moment becomes a cherished memory
