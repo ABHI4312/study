@@ -9,7 +9,7 @@ const SitePasswordGate = ({ onUnlock }) => {
   const [attempts, setAttempts] = useState(0);
 
   // The site access password (you can change this)
-  const SITE_PASSWORD = 'OurLittleUniverse2024';
+  const SITE_PASSWORD = 'Abhiya@1328';
 
   // Floating hearts animation
   const FloatingHeart = ({ delay }) => (

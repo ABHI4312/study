@@ -232,7 +232,7 @@ const seedDatabase = async () => {
     // Setup secret code
     console.log('🔐 Setting up secret code...');
     await Auth.deleteMany({});
-    await Auth.create({ secretCode: 'OurSecret123' });
+    await Auth.create({ secretCode: 'TanuMyLife' });
 
     console.log('✅ Database seeded successfully!');
     console.log('\n📊 Summary:');
