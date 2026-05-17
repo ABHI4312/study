@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import MusicPlayer from './components/MusicPlayer';
 import LoadingScreen from './components/LoadingScreen';
+import SitePasswordGate from './components/SitePasswordGate';
 import ProtectedRoute from './components/ProtectedRoute';
 import Landing from './pages/Landing';
 import MemoryTimeline from './pages/MemoryTimeline';
@@ -22,8 +23,15 @@ import AddOpenWhen from './pages/AddOpenWhen';
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const [isUnlocked, setIsUnlocked] = useState(false);
 
   useEffect(() => {
+    // Check if site is already unlocked in this session
+    const unlocked = sessionStorage.getItem('siteUnlocked');
+    if (unlocked === 'true') {
+      setIsUnlocked(true);
+    }
+
     // Simulate initial loading
     const timer = setTimeout(() => {
       setLoading(false);
@@ -31,8 +39,17 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
+  const handleUnlock = () => {
+    setIsUnlocked(true);
+  };
+
   if (loading) {
     return <LoadingScreen onLoadingComplete={() => setLoading(false)} />;
+  }
+
+  // Show password gate if not unlocked
+  if (!isUnlocked) {
+    return <SitePasswordGate onUnlock={handleUnlock} />;
   }
 
   return (
