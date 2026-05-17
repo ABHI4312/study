@@ -7,9 +7,6 @@ const errorHandler = require('./middleware/errorHandler');
 // Load env vars
 dotenv.config();
 
-// Connect to database
-connectDB();
-
 const app = express();
 
 // Body parser middleware
@@ -41,6 +38,9 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+// Connect to database (async, non-blocking)
+connectDB();
 
 // Routes
 app.use('/api/memories', require('./routes/memoryRoutes'));
