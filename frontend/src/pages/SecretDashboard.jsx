@@ -20,10 +20,13 @@ const SecretDashboard = () => {
 
   useEffect(() => {
     fetchData();
+  }, []);
+
+  useEffect(() => {
     updateCountdown();
     const interval = setInterval(updateCountdown, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [nextMeetingDate]); // Update countdown when meeting date changes
 
   const fetchData = async () => {
     try {
@@ -63,6 +66,14 @@ const SecretDashboard = () => {
         minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
         seconds: Math.floor((distance % (1000 * 60)) / 1000),
       });
+    } else {
+      // Meeting date has passed
+      setCountdown({
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+      });
     }
   };
 
@@ -100,12 +111,20 @@ const SecretDashboard = () => {
       return;
     }
 
+    const selectedDate = new Date(newDate);
+    const now = new Date();
+    
+    if (selectedDate <= now) {
+      alert('Please select a future date! ⏰');
+      return;
+    }
+
     try {
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
       await axios.put(`${API_URL}/counter/love-counter/meeting-date`, {
         meetingDate: newDate,
       });
-      setNextMeetingDate(new Date(newDate));
+      setNextMeetingDate(selectedDate);
       setShowEditDate(false);
       setNewDate('');
       alert('Meeting date updated! 💕');
@@ -228,7 +247,9 @@ const SecretDashboard = () => {
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-3xl font-romantic font-bold text-white flex items-center">
                 <span className="mr-3">⏰</span>
-                Until We Meet Again
+                {nextMeetingDate.getTime() > new Date().getTime() 
+                  ? 'Until We Meet Again' 
+                  : 'We\'ve Met! 💕'}
               </h2>
               <motion.button
                 whileHover={{ scale: 1.1 }}
@@ -240,34 +261,61 @@ const SecretDashboard = () => {
               </motion.button>
             </div>
             
-            <div className="grid grid-cols-4 gap-4">
-              {[
-                { label: 'Days', value: countdown.days },
-                { label: 'Hours', value: countdown.hours },
-                { label: 'Minutes', value: countdown.minutes },
-                { label: 'Seconds', value: countdown.seconds },
-              ].map((item, index) => (
+            {nextMeetingDate.getTime() > new Date().getTime() ? (
+              <>
+                <div className="grid grid-cols-4 gap-4">
+                  {[
+                    { label: 'Days', value: countdown.days },
+                    { label: 'Hours', value: countdown.hours },
+                    { label: 'Minutes', value: countdown.minutes },
+                    { label: 'Seconds', value: countdown.seconds },
+                  ].map((item, index) => (
+                    <motion.div
+                      key={index}
+                      animate={{ scale: [1, 1.05, 1] }}
+                      transition={{ duration: 1, repeat: Infinity, delay: index * 0.2 }}
+                      className="bg-gradient-to-br from-romantic-500/20 to-purple-500/20 rounded-xl p-4 text-center border border-romantic-500/30"
+                    >
+                      <div className="text-4xl font-bold text-romantic-400 mb-2">
+                        {item.value}
+                      </div>
+                      <div className="text-gray-400 text-sm">{item.label}</div>
+                    </motion.div>
+                  ))}
+                </div>
+                
+                <p className="text-gray-400 text-sm text-center mt-4">
+                  Meeting on: {nextMeetingDate.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}
+                </p>
+              </>
+            ) : (
+              <div className="text-center py-8">
                 <motion.div
-                  key={index}
-                  animate={{ scale: [1, 1.05, 1] }}
-                  transition={{ duration: 1, repeat: Infinity, delay: index * 0.2 }}
-                  className="bg-gradient-to-br from-romantic-500/20 to-purple-500/20 rounded-xl p-4 text-center border border-romantic-500/30"
+                  animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="text-8xl mb-4"
                 >
-                  <div className="text-4xl font-bold text-romantic-400 mb-2">
-                    {item.value}
-                  </div>
-                  <div className="text-gray-400 text-sm">{item.label}</div>
+                  🎉
                 </motion.div>
-              ))}
-            </div>
-            
-            <p className="text-gray-400 text-sm text-center mt-4">
-              Meeting on: {nextMeetingDate.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              })}
-            </p>
+                <p className="text-2xl text-romantic-400 font-romantic font-bold mb-2">
+                  The wait is over!
+                </p>
+                <p className="text-gray-400 text-sm">
+                  Last meeting was on: {nextMeetingDate.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}
+                </p>
+                <p className="text-gray-500 text-xs mt-2">
+                  Click the edit button to set your next meeting date
+                </p>
+              </div>
+            )}
           </motion.div>
 
           {/* I Love You Counter */}
