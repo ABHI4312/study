@@ -14,6 +14,9 @@ const counterSchema = new mongoose.Schema(
     lastIncremented: {
       type: Date,
     },
+    meetingDate: {
+      type: Date,
+    },
   },
   {
     timestamps: true,

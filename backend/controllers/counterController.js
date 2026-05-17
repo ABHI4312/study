@@ -77,8 +77,48 @@ const resetCounter = async (req, res) => {
   }
 };
 
+// @desc    Update meeting date
+// @route   PUT /api/counter/:name/meeting-date
+// @access  Public
+const updateMeetingDate = async (req, res) => {
+  try {
+    const { meetingDate } = req.body;
+    
+    if (!meetingDate) {
+      return res.status(400).json({
+        success: false,
+        message: 'Meeting date is required',
+      });
+    }
+
+    let counter = await Counter.findOne({ name: req.params.name });
+
+    if (!counter) {
+      counter = await Counter.create({
+        name: req.params.name,
+        count: 0,
+        meetingDate: new Date(meetingDate),
+      });
+    } else {
+      counter.meetingDate = new Date(meetingDate);
+      await counter.save();
+    }
+
+    res.status(200).json({
+      success: true,
+      data: counter,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getCounter,
   incrementCounter,
   resetCounter,
+  updateMeetingDate,
 };
