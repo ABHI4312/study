@@ -16,7 +16,7 @@ const fallbackSongs = [
       cover_medium: getPlaceholderImage('Tum+Se', 250),
       cover_xl: getPlaceholderImage('Tum+Se', 500),
     },
-    preview: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+    preview: 'https://pagalnew.com/download320/15878',
     duration: 245,
   },
   {
@@ -28,7 +28,7 @@ const fallbackSongs = [
       cover_medium: getPlaceholderImage('Sitaare', 250),
       cover_xl: getPlaceholderImage('Sitaare', 500),
     },
-    preview: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+    preview: 'https://pagalnew.com/download320/14567',
     duration: 258,
   },
   {
@@ -40,7 +40,7 @@ const fallbackSongs = [
       cover_medium: getPlaceholderImage('Bairan', 250),
       cover_xl: getPlaceholderImage('Bairan', 500),
     },
-    preview: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+    preview: 'https://pagalnew.com/download320/13456',
     duration: 267,
   },
   {
@@ -64,7 +64,7 @@ const fallbackSongs = [
       cover_medium: getPlaceholderImage('Kesariya', 250),
       cover_xl: getPlaceholderImage('Kesariya', 500),
     },
-    preview: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
+    preview: 'https://pagalnew.com/download320/12345',
     duration: 271,
   },
   {
@@ -76,7 +76,7 @@ const fallbackSongs = [
       cover_medium: getPlaceholderImage('Channa', 250),
       cover_xl: getPlaceholderImage('Channa', 500),
     },
-    preview: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
+    preview: 'https://pagalnew.com/download320/11234',
     duration: 295,
   },
   {
@@ -88,7 +88,7 @@ const fallbackSongs = [
       cover_medium: getPlaceholderImage('Tere+Hawale', 250),
       cover_xl: getPlaceholderImage('Tere+Hawale', 500),
     },
-    preview: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',
+    preview: 'https://pagalnew.com/download320/10123',
     duration: 283,
   },
   {
@@ -100,7 +100,7 @@ const fallbackSongs = [
       cover_medium: getPlaceholderImage('Raataan', 250),
       cover_xl: getPlaceholderImage('Raataan', 500),
     },
-    preview: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
+    preview: 'https://pagalnew.com/download320/9012',
     duration: 254,
   },
   {
@@ -112,7 +112,7 @@ const fallbackSongs = [
       cover_medium: getPlaceholderImage('Apna+Bana', 250),
       cover_xl: getPlaceholderImage('Apna+Bana', 500),
     },
-    preview: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3',
+    preview: 'https://pagalnew.com/download320/8901',
     duration: 248,
   },
   {
@@ -136,7 +136,7 @@ const fallbackSongs = [
       cover_medium: getPlaceholderImage('Pehle+Bhi', 250),
       cover_xl: getPlaceholderImage('Pehle+Bhi', 500),
     },
-    preview: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3',
+    preview: 'https://pagalnew.com/download320/7890',
     duration: 262,
   },
   {
@@ -148,7 +148,7 @@ const fallbackSongs = [
       cover_medium: getPlaceholderImage('Agar+Tum', 250),
       cover_xl: getPlaceholderImage('Agar+Tum', 500),
     },
-    preview: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3',
+    preview: 'https://pagalnew.com/download320/6789',
     duration: 341,
   },
   {
@@ -160,7 +160,7 @@ const fallbackSongs = [
       cover_medium: getPlaceholderImage('Tum+Hi+Ho', 250),
       cover_xl: getPlaceholderImage('Tum+Hi+Ho', 500),
     },
-    preview: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3',
+    preview: 'https://pagalnew.com/download320/5678',
     duration: 262,
   },
   {
@@ -172,7 +172,7 @@ const fallbackSongs = [
       cover_medium: getPlaceholderImage('Shayad', 250),
       cover_xl: getPlaceholderImage('Shayad', 500),
     },
-    preview: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3',
+    preview: 'https://pagalnew.com/download320/4567',
     duration: 238,
   },
   {
@@ -184,7 +184,7 @@ const fallbackSongs = [
       cover_medium: getPlaceholderImage('Kamleya', 250),
       cover_xl: getPlaceholderImage('Kamleya', 500),
     },
-    preview: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3',
+    preview: 'https://pagalnew.com/download320/3456',
     duration: 276,
   },
 ];
