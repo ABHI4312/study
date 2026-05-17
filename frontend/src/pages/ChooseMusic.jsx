@@ -11,9 +11,17 @@ const ChooseMusic = () => {
   const [playingPreview, setPlayingPreview] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [customUrl, setCustomUrl] = useState('');
+  const [imageErrors, setImageErrors] = useState({});
   const previewAudioRef = useRef(null);
   
   const { playSong, currentSong } = useMusic();
+
+  // Fallback image for when album cover fails to load
+  const fallbackImage = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect fill="%23374151" width="300" height="300"/%3E%3Ctext x="150" y="150" font-size="80" text-anchor="middle" dy=".3em" fill="%23ec4899"%3E🎵%3C/text%3E%3C/svg%3E';
+
+  const handleImageError = (songId) => {
+    setImageErrors(prev => ({ ...prev, [songId]: true }));
+  };
 
   const searchSongs = async (e) => {
     e.preventDefault();
@@ -156,6 +164,7 @@ const ChooseMusic = () => {
                 src={currentSong.albumCover}
                 alt={currentSong.title}
                 className="w-20 h-20 rounded-lg object-cover"
+                onError={(e) => { e.target.src = fallbackImage; }}
               />
               <div className="flex-1">
                 <h3 className="text-xl font-bold text-white">{currentSong.title}</h3>
@@ -267,9 +276,10 @@ const ChooseMusic = () => {
                   {/* Album Cover */}
                   <div className="relative mb-4 rounded-lg overflow-hidden group">
                     <img
-                      src={song.album.cover_medium}
+                      src={imageErrors[song.id] ? fallbackImage : song.album.cover_medium}
                       alt={song.title}
                       className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+                      onError={() => handleImageError(song.id)}
                     />
                     {/* Preview Play Button */}
                     <motion.button

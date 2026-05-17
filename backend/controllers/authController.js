@@ -1,4 +1,6 @@
 const Auth = require('../models/Auth');
+const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 
 // @desc    Verify secret code
 // @route   POST /api/auth/verify
@@ -14,6 +16,14 @@ const verifyCode = async (req, res) => {
       });
     }
 
+    // Check if database is connected
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({
+        success: false,
+        message: 'Database not connected. Please check MongoDB configuration.',
+      });
+    }
+
     const auth = await Auth.findOne({ secretCode, isActive: true });
 
     if (!auth) {
@@ -23,9 +33,17 @@ const verifyCode = async (req, res) => {
       });
     }
 
+    // Generate JWT token
+    const token = jwt.sign(
+      { authenticated: true, secretCode },
+      process.env.JWT_SECRET || 'ourlittleuniverse2024secretkey',
+      { expiresIn: '30d' }
+    );
+
     res.status(200).json({
       success: true,
       message: 'Access granted',
+      token,
       data: {
         authenticated: true,
       },
@@ -49,6 +67,14 @@ const setupCode = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: 'Please provide a secret code',
+      });
+    }
+
+    // Check if database is connected
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({
+        success: false,
+        message: 'Database not connected. Please check MongoDB configuration.',
       });
     }
 

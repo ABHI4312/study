@@ -229,10 +229,10 @@ const seedDatabase = async () => {
     console.log('💕 Creating love counter...');
     await Counter.create({ name: 'love-counter', count: 0 });
 
-    // Setup secret code (optional - uncomment to set)
-    // console.log('🔐 Setting up secret code...');
-    // await Auth.deleteMany({});
-    // await Auth.create({ secretCode: 'OurSecret123' });
+    // Setup secret code
+    console.log('🔐 Setting up secret code...');
+    await Auth.deleteMany({});
+    await Auth.create({ secretCode: 'OurSecret123' });
 
     console.log('✅ Database seeded successfully!');
     console.log('\n📊 Summary:');

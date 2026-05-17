@@ -6,7 +6,11 @@ import { useMusic } from '../context/MusicContext';
 
 const MusicPlayer = () => {
   const [showPlayer, setShowPlayer] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const { currentSong, isPlaying, volume, isMuted, togglePlay, changeVolume, toggleMute } = useMusic();
+
+  // Fallback image for when album cover fails to load
+  const fallbackImage = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Crect fill="%23374151" width="100" height="100"/%3E%3Ctext x="50" y="50" font-size="40" text-anchor="middle" dy=".3em" fill="%23ec4899"%3E🎵%3C/text%3E%3C/svg%3E';
 
   return (
     <>
@@ -75,9 +79,10 @@ const MusicPlayer = () => {
                 <div className="mb-4">
                   <div className="flex items-center gap-3 mb-3">
                     <img
-                      src={currentSong.albumCover}
+                      src={imageError ? fallbackImage : currentSong.albumCover}
                       alt={currentSong.title}
                       className="w-12 h-12 rounded-lg object-cover"
+                      onError={() => setImageError(true)}
                     />
                     <div className="flex-1 min-w-0">
                       <p className="text-white text-sm font-medium truncate">
