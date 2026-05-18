@@ -254,6 +254,60 @@ const ChooseMusic = () => {
           </p>
         </motion.div>
 
+        {/* My Songs Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+          className="card mb-8"
+        >
+          <h2 className="text-2xl font-romantic font-bold text-white mb-6">
+            💕 My Songs
+          </h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            {/* Teri Khamoshi Song */}
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              className="bg-dark-700/50 rounded-lg p-4 border border-romantic-500/20 hover:border-romantic-500/50 transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-romantic-500 to-purple-500 rounded-lg flex items-center justify-center text-3xl">
+                  🎵
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-bold text-white">Teri Khamoshi</h3>
+                  <p className="text-gray-400 text-sm">Rahul Sapkal</p>
+                  <p className="text-gray-500 text-xs">Emotional Romantic Song</p>
+                </div>
+              </div>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  playSong({
+                    title: 'Teri Khamoshi',
+                    artist: 'Rahul Sapkal',
+                    albumCover: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect fill="%23ec4899" width="300" height="300"/%3E%3Ctext x="150" y="150" font-size="80" text-anchor="middle" dy=".3em" fill="%23ffffff"%3E💕%3C/text%3E%3C/svg%3E',
+                    previewUrl: '/music/teri-khamoshi.mp3',
+                    isCustom: true,
+                  });
+                  setShowSuccess(true);
+                  setTimeout(() => setShowSuccess(false), 3000);
+                }}
+                className="btn-primary w-full mt-4"
+              >
+                <FaMusic className="inline mr-2" />
+                Play This Song
+              </motion.button>
+            </motion.div>
+          </div>
+          <div className="mt-4 bg-romantic-500/10 border border-romantic-500/30 rounded-lg p-4">
+            <p className="text-gray-400 text-sm">
+              📁 <strong>To add more songs:</strong> Copy your MP3 files to <code className="text-romantic-400">frontend/public/music/</code> folder
+            </p>
+          </div>
+        </motion.div>
+
         {/* Search Results */}
         {searchResults.length > 0 && (
           <motion.div
