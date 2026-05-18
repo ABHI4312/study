@@ -13,6 +13,16 @@ const ChooseMusic = () => {
   const [customUrl, setCustomUrl] = useState('');
   const [imageErrors, setImageErrors] = useState({});
   const [mySongs, setMySongs] = useState([]);
+  const [showUploadForm, setShowUploadForm] = useState(false);
+  const [uploadData, setUploadData] = useState({
+    title: '',
+    artist: '',
+    description: '',
+    emoji: '🎵',
+    color: 'from-romantic-500 to-purple-500',
+  });
+  const [uploadFile, setUploadFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const previewAudioRef = useRef(null);
   
   const { playSong, currentSong } = useMusic();
@@ -22,11 +32,27 @@ const ChooseMusic = () => {
 
   // Load my songs from JSON file
   useEffect(() => {
-    fetch('/music/songs.json')
-      .then(res => res.json())
-      .then(data => setMySongs(data))
-      .catch(err => console.error('Error loading songs:', err));
+    loadMySongs();
   }, []);
+
+  const loadMySongs = async () => {
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const response = await fetch(`${API_URL}/songs`);
+      const data = await response.json();
+      
+      if (data.success) {
+        setMySongs(data.data);
+      }
+    } catch (err) {
+      console.error('Error loading songs:', err);
+      // Fallback to JSON file if API fails
+      fetch('/music/songs.json')
+        .then(res => res.json())
+        .then(data => setMySongs(data))
+        .catch(err => console.error('Error loading songs from JSON:', err));
+    }
+  };
 
   const handleImageError = (songId) => {
     setImageErrors(prev => ({ ...prev, [songId]: true }));
@@ -108,6 +134,103 @@ const ChooseMusic = () => {
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
     setCustomUrl('');
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Check if it's an audio file
+      if (!file.type.startsWith('audio/')) {
+        alert('Please select an audio file (MP3, WAV, etc.)');
+        return;
+      }
+      
+      // Check file size (max 50MB)
+      if (file.size > 50 * 1024 * 1024) {
+        alert('File size must be less than 50MB');
+        return;
+      }
+      
+      setUploadFile(file);
+    }
+  };
+
+  const handleUploadSong = async () => {
+    if (!uploadFile) {
+      alert('Please select an audio file');
+      return;
+    }
+
+    if (!uploadData.title || !uploadData.artist) {
+      alert('Please enter song title and artist name');
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const formData = new FormData();
+      formData.append('audio', uploadFile);
+      formData.append('title', uploadData.title);
+      formData.append('artist', uploadData.artist);
+      formData.append('description', uploadData.description || 'Romantic Song');
+      formData.append('emoji', uploadData.emoji);
+      formData.append('color', uploadData.color);
+
+      const response = await fetch(`${API_URL}/songs/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert(data.message);
+        setShowUploadForm(false);
+        setUploadData({
+          title: '',
+          artist: '',
+          description: '',
+          emoji: '🎵',
+          color: 'from-romantic-500 to-purple-500',
+        });
+        setUploadFile(null);
+        loadMySongs(); // Reload songs
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.error('Error uploading song:', error);
+      alert('Failed to upload song. Please try again.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleDeleteSong = async (songId) => {
+    if (!confirm('Are you sure you want to delete this song?')) {
+      return;
+    }
+
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const response = await fetch(`${API_URL}/songs/${songId}`, {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert('Song deleted successfully!');
+        loadMySongs(); // Reload songs
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.error('Error deleting song:', error);
+      alert('Failed to delete song');
+    }
   };
 
   return (

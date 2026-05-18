@@ -25,5 +25,14 @@
     "filename": "bairan.mp3",
     "emoji": "💕",
     "color": "from-romantic-500 to-purple-500"
+  },
+  {
+    "id": 4,
+    "title": "Sitaare",
+    "artist": "Amitaabh bhattacharya",
+    "description": "Emotional Romantic Song",
+    "filename": "sitaare.mp3",
+    "emoji": "💕",
+    "color": "from-romantic-500 to-purple-500"
   }
 ]
