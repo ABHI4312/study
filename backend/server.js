@@ -52,6 +52,7 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/surprises', require('./routes/surpriseMessageRoutes'));
 app.use('/api/music', require('./routes/musicSettingsRoutes'));
 app.use('/api/deezer', require('./routes/deezerProxyRoutes'));
+app.use('/api/songs', require('./routes/songRoutes'));
 
 // Health check route
 app.get('/', (req, res) => {
