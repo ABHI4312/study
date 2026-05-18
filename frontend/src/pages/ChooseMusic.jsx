@@ -361,29 +361,190 @@ const ChooseMusic = () => {
         >
           <h2 className="text-2xl font-romantic font-bold text-white mb-4">
             <FaUpload className="inline mr-2" />
-            Custom MP3 URL
+            Upload New Song 🎵
           </h2>
-          <div className="flex gap-3">
-            <input
-              type="url"
-              value={customUrl}
-              onChange={(e) => setCustomUrl(e.target.value)}
-              placeholder="https://example.com/your-song.mp3"
-              className="input-field flex-1"
-            />
+          
+          {!showUploadForm ? (
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={setCustomMusic}
-              className="btn-secondary px-8"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setShowUploadForm(true)}
+              className="btn-primary w-full py-4 text-lg"
             >
-              <FaMusic className="inline mr-2" />
-              Set Custom
+              <FaUpload className="inline mr-2" />
+              Click to Upload Your Song
             </motion.button>
-          </div>
-          <p className="text-gray-500 text-sm mt-2">
-            💡 Paste a direct link to an MP3 file hosted online
-          </p>
+          ) : (
+            <div className="space-y-4">
+              {/* File Upload */}
+              <div>
+                <label className="block text-gray-300 mb-2 font-medium">
+                  Select Audio File * (MP3, WAV, etc.)
+                </label>
+                <input
+                  type="file"
+                  accept="audio/*"
+                  onChange={handleFileChange}
+                  className="w-full px-4 py-3 bg-dark-700 border-2 border-romantic-500/30 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-romantic-500 file:text-white hover:file:bg-romantic-600 cursor-pointer"
+                />
+                {uploadFile && (
+                  <p className="text-green-400 text-sm mt-2">
+                    ✓ Selected: {uploadFile.name} ({(uploadFile.size / (1024 * 1024)).toFixed(2)} MB)
+                  </p>
+                )}
+                <p className="text-gray-500 text-xs mt-1">Max size: 50MB</p>
+              </div>
+
+              {/* Song Title */}
+              <div>
+                <label className="block text-gray-300 mb-2 font-medium">
+                  Song Title *
+                </label>
+                <input
+                  type="text"
+                  value={uploadData.title}
+                  onChange={(e) => setUploadData({ ...uploadData, title: e.target.value })}
+                  placeholder="e.g., Teri Khamoshi"
+                  className="input-field"
+                />
+              </div>
+
+              {/* Artist Name */}
+              <div>
+                <label className="block text-gray-300 mb-2 font-medium">
+                  Artist Name *
+                </label>
+                <input
+                  type="text"
+                  value={uploadData.artist}
+                  onChange={(e) => setUploadData({ ...uploadData, artist: e.target.value })}
+                  placeholder="e.g., Rahul Sapkal"
+                  className="input-field"
+                />
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className="block text-gray-300 mb-2 font-medium">
+                  Description (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={uploadData.description}
+                  onChange={(e) => setUploadData({ ...uploadData, description: e.target.value })}
+                  placeholder="e.g., Romantic Ballad"
+                  className="input-field"
+                />
+              </div>
+
+              {/* Emoji Selection */}
+              <div>
+                <label className="block text-gray-300 mb-2 font-medium">
+                  Choose Emoji
+                </label>
+                <div className="grid grid-cols-8 gap-2">
+                  {['🎵', '🎶', '🎼', '💕', '💖', '🌅', '⭐', '✨', '💫', '🌟', '❤️', '💙', '💚', '💛', '🧡', '💜'].map((emoji) => (
+                    <motion.button
+                      key={emoji}
+                      type="button"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => setUploadData({ ...uploadData, emoji })}
+                      className={`p-3 rounded-lg border-2 text-2xl transition-all ${
+                        uploadData.emoji === emoji
+                          ? 'border-romantic-500 bg-romantic-500/20'
+                          : 'border-dark-600 bg-dark-700/50 hover:border-romantic-500/50'
+                      }`}
+                    >
+                      {emoji}
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Color Selection */}
+              <div>
+                <label className="block text-gray-300 mb-2 font-medium">
+                  Choose Color Theme
+                </label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {[
+                    { name: 'Pink-Purple', value: 'from-romantic-500 to-purple-500' },
+                    { name: 'Purple-Pink', value: 'from-purple-500 to-pink-500' },
+                    { name: 'Blue-Green', value: 'from-blue-500 to-green-500' },
+                    { name: 'Red-Orange', value: 'from-red-500 to-orange-500' },
+                  ].map((color) => (
+                    <motion.button
+                      key={color.value}
+                      type="button"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setUploadData({ ...uploadData, color: color.value })}
+                      className={`p-3 rounded-lg border-2 transition-all ${
+                        uploadData.color === color.value
+                          ? 'border-romantic-500'
+                          : 'border-dark-600 hover:border-romantic-500/50'
+                      }`}
+                    >
+                      <div className={`h-8 rounded bg-gradient-to-r ${color.value} mb-2`}></div>
+                      <p className="text-white text-xs">{color.name}</p>
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex gap-3 pt-4">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleUploadSong}
+                  disabled={uploading}
+                  className="flex-1 bg-gradient-to-r from-romantic-500 to-purple-500 text-white py-3 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {uploading ? (
+                    <span className="flex items-center justify-center">
+                      <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      Uploading...
+                    </span>
+                  ) : (
+                    <>
+                      <FaUpload className="inline mr-2" />
+                      Upload Song
+                    </>
+                  )}
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => {
+                    setShowUploadForm(false);
+                    setUploadFile(null);
+                    setUploadData({
+                      title: '',
+                      artist: '',
+                      description: '',
+                      emoji: '🎵',
+                      color: 'from-romantic-500 to-purple-500',
+                    });
+                  }}
+                  className="flex-1 bg-dark-700 text-gray-300 py-3 rounded-lg font-semibold"
+                >
+                  Cancel
+                </motion.button>
+              </div>
+
+              {/* Info */}
+              <div className="bg-romantic-500/10 border border-romantic-500/30 rounded-lg p-4">
+                <p className="text-gray-400 text-sm">
+                  💡 <strong>Note:</strong> Your song will be uploaded to cloud storage and will appear automatically in "My Songs" section below.
+                </p>
+              </div>
+            </div>
+          )}
         </motion.div>
 
         {/* My Songs Section */}
@@ -409,15 +570,30 @@ const ChooseMusic = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {mySongs.map((song) => (
                 <motion.div
-                  key={song.id}
+                  key={song.id || song._id}
                   whileHover={{ scale: 1.02 }}
-                  className="bg-dark-700/50 rounded-lg p-4 border border-romantic-500/20 hover:border-romantic-500/50 transition-all"
+                  className="bg-dark-700/50 rounded-lg p-4 border border-romantic-500/20 hover:border-romantic-500/50 transition-all relative group"
                 >
+                  {/* Delete Button */}
+                  {song._id && (
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => handleDeleteSong(song._id)}
+                      className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                      title="Delete song"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </motion.button>
+                  )}
+                  
                   <div className="flex items-center gap-4 mb-4">
-                    <div className={`w-16 h-16 bg-gradient-to-br ${song.color} rounded-lg flex items-center justify-center text-3xl`}>
+                    <div className={`w-16 h-16 bg-gradient-to-br ${song.color} rounded-lg flex items-center justify-center text-3xl flex-shrink-0`}>
                       {song.emoji}
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <h3 className="text-lg font-bold text-white line-clamp-1">{song.title}</h3>
                       <p className="text-gray-400 text-sm line-clamp-1">{song.artist}</p>
                       <p className="text-gray-500 text-xs line-clamp-1">{song.description}</p>
@@ -431,7 +607,7 @@ const ChooseMusic = () => {
                         title: song.title,
                         artist: song.artist,
                         albumCover: `data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect fill="%23${song.color.includes('romantic') ? 'ec4899' : 'a855f7'}" width="300" height="300"/%3E%3Ctext x="150" y="150" font-size="80" text-anchor="middle" dy=".3em" fill="%23ffffff"%3E${song.emoji}%3C/text%3E%3C/svg%3E`,
-                        previewUrl: `/music/${song.filename}`,
+                        previewUrl: song.fileUrl || `/music/${song.filename}`,
                         isCustom: true,
                       });
                       setShowSuccess(true);
