@@ -16,5 +16,14 @@
     "filename": "Sun_breathe.mp3",
     "emoji": "🌅",
     "color": "from-purple-500 to-pink-500"
+  },
+  {
+    "id": 3,
+    "title": "Bairan",
+    "artist": "Sumit and Anuj",
+    "description": "Emotional Romantic Song",
+    "filename": "bairan.mp3",
+    "emoji": "💕",
+    "color": "from-romantic-500 to-purple-500"
   }
 ]
