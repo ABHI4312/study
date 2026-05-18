@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Confetti from 'react-confetti';
 import axios from 'axios';
-import { FaHeart, FaCheckCircle, FaCircle, FaEdit, FaPlus, FaTrash } from 'react-icons/fa';
+import { FaHeart, FaCheckCircle, FaCircle, FaEdit, FaPlus, FaTrash, FaKey } from 'react-icons/fa';
 
 const SecretDashboard = () => {
   const [showConfetti, setShowConfetti] = useState(false);
@@ -16,6 +16,8 @@ const SecretDashboard = () => {
   const [newDate, setNewDate] = useState('');
   const [showAddGoal, setShowAddGoal] = useState(false);
   const [newGoal, setNewGoal] = useState({ title: '', description: '', targetDate: '', category: 'together' });
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [passwordData, setPasswordData] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -168,6 +170,45 @@ const SecretDashboard = () => {
     }
   };
 
+  const handleChangePassword = async () => {
+    const { oldPassword, newPassword, confirmPassword } = passwordData;
+
+    if (!oldPassword || !newPassword || !confirmPassword) {
+      alert('Please fill all fields');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      alert('New passwords do not match!');
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      alert('New password must be at least 6 characters long');
+      return;
+    }
+
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const response = await axios.post(`${API_URL}/auth/change-password`, {
+        oldPassword,
+        newPassword,
+      });
+
+      alert(response.data.message);
+      setShowChangePassword(false);
+      setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' });
+      
+      // Logout after password change
+      setTimeout(() => {
+        handleLogout();
+      }, 2000);
+    } catch (error) {
+      console.error('Error changing password:', error);
+      alert(error.response?.data?.message || 'Failed to change password');
+    }
+  };
+
   return (
     <div className="min-h-screen py-12 px-4 relative overflow-hidden">
       {showConfetti && <Confetti recycle={false} numberOfPieces={500} />}
@@ -209,12 +250,22 @@ const SecretDashboard = () => {
             Our Secret Universe 💝
           </h1>
           <p className="text-gray-400 text-lg">Welcome to our private sanctuary</p>
-          <button
-            onClick={handleLogout}
-            className="mt-4 text-gray-500 hover:text-romantic-400 transition-colors"
-          >
-            Logout
-          </button>
+          <div className="mt-4 flex justify-center gap-4">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowChangePassword(true)}
+              className="text-romantic-400 hover:text-romantic-300 transition-colors flex items-center gap-2"
+            >
+              <FaKey /> Change Password
+            </motion.button>
+            <button
+              onClick={handleLogout}
+              className="text-gray-500 hover:text-romantic-400 transition-colors"
+            >
+              Logout
+            </button>
+          </div>
         </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-8">
@@ -582,6 +633,102 @@ const SecretDashboard = () => {
                     onClick={() => {
                       setShowAddGoal(false);
                       setNewGoal({ title: '', description: '', targetDate: '', category: 'together' });
+                    }}
+                    className="flex-1 bg-dark-700 text-gray-300 py-3 rounded-lg font-semibold"
+                  >
+                    Cancel
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Change Password Modal */}
+      <AnimatePresence>
+        {showChangePassword && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowChangePassword(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-gradient-to-br from-dark-800 to-dark-900 rounded-2xl p-8 max-w-md w-full border-2 border-romantic-500/30"
+            >
+              <div className="text-center mb-6">
+                <div className="bg-romantic-500/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FaKey className="text-romantic-400 text-3xl" />
+                </div>
+                <h3 className="text-3xl font-romantic font-bold text-white">
+                  Change Password 🔐
+                </h3>
+                <p className="text-gray-400 text-sm mt-2">
+                  Update your secret space password
+                </p>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-gray-300 mb-2">Current Password *</label>
+                  <input
+                    type="password"
+                    value={passwordData.oldPassword}
+                    onChange={(e) => setPasswordData({ ...passwordData, oldPassword: e.target.value })}
+                    placeholder="Enter current password"
+                    className="w-full px-4 py-3 bg-dark-700 border-2 border-romantic-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-romantic-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-300 mb-2">New Password *</label>
+                  <input
+                    type="password"
+                    value={passwordData.newPassword}
+                    onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                    placeholder="Enter new password (min 6 characters)"
+                    className="w-full px-4 py-3 bg-dark-700 border-2 border-romantic-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-romantic-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-300 mb-2">Confirm New Password *</label>
+                  <input
+                    type="password"
+                    value={passwordData.confirmPassword}
+                    onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                    placeholder="Re-enter new password"
+                    className="w-full px-4 py-3 bg-dark-700 border-2 border-romantic-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-romantic-500"
+                  />
+                </div>
+
+                <div className="bg-romantic-500/10 border border-romantic-500/30 rounded-lg p-3">
+                  <p className="text-gray-400 text-xs">
+                    ⚠️ <strong>Important:</strong> After changing password, you'll be logged out. Use the new password to login again.
+                  </p>
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleChangePassword}
+                    className="flex-1 bg-gradient-to-r from-romantic-500 to-purple-500 text-white py-3 rounded-lg font-semibold"
+                  >
+                    Change Password
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      setShowChangePassword(false);
+                      setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' });
                     }}
                     className="flex-1 bg-dark-700 text-gray-300 py-3 rounded-lg font-semibold"
                   >

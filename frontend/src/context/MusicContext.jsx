@@ -111,10 +111,24 @@ export const MusicProvider = ({ children }) => {
   // Update audio element when song changes
   useEffect(() => {
     if (currentSong && audioRef.current) {
-      audioRef.current.src = currentSong.previewUrl;
-      audioRef.current.volume = volume;
+      const audio = audioRef.current;
+      audio.src = currentSong.previewUrl;
+      audio.volume = volume;
+      audio.muted = isMuted;
+      
+      // Play the audio
       if (isPlaying) {
-        audioRef.current.play().catch(err => console.log('Autoplay prevented:', err));
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              console.log('Audio playing successfully');
+            })
+            .catch(err => {
+              console.error('Autoplay prevented:', err);
+              setIsPlaying(false);
+            });
+        }
       }
     }
   }, [currentSong]);

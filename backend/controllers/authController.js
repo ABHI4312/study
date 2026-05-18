@@ -97,7 +97,59 @@ const setupCode = async (req, res) => {
   }
 };
 
+// @desc    Change secret code with old password verification
+// @route   POST /api/auth/change-password
+// @access  Public
+const changePassword = async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide both old and new passwords',
+      });
+    }
+
+    // Check if database is connected
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({
+        success: false,
+        message: 'Database not connected. Please check MongoDB configuration.',
+      });
+    }
+
+    // Verify old password
+    const auth = await Auth.findOne({ secretCode: oldPassword, isActive: true });
+
+    if (!auth) {
+      return res.status(401).json({
+        success: false,
+        message: 'Old password is incorrect',
+      });
+    }
+
+    // Update to new password
+    auth.secretCode = newPassword;
+    await auth.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Password changed successfully! 🔐',
+      data: {
+        message: 'Please use the new password for future logins',
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   verifyCode,
   setupCode,
+  changePassword,
 };
