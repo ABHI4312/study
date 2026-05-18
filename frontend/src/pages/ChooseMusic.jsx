@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaSearch, FaPlay, FaPause, FaMusic, FaUpload, FaCheck } from 'react-icons/fa';
 import { useMusic } from '../context/MusicContext';
@@ -12,12 +12,21 @@ const ChooseMusic = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [customUrl, setCustomUrl] = useState('');
   const [imageErrors, setImageErrors] = useState({});
+  const [mySongs, setMySongs] = useState([]);
   const previewAudioRef = useRef(null);
   
   const { playSong, currentSong } = useMusic();
 
   // Fallback image for when album cover fails to load
   const fallbackImage = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect fill="%23374151" width="300" height="300"/%3E%3Ctext x="150" y="150" font-size="80" text-anchor="middle" dy=".3em" fill="%23ec4899"%3E🎵%3C/text%3E%3C/svg%3E';
+
+  // Load my songs from JSON file
+  useEffect(() => {
+    fetch('/music/songs.json')
+      .then(res => res.json())
+      .then(data => setMySongs(data))
+      .catch(err => console.error('Error loading songs:', err));
+  }, []);
 
   const handleImageError = (songId) => {
     setImageErrors(prev => ({ ...prev, [songId]: true }));
@@ -264,47 +273,67 @@ const ChooseMusic = () => {
           <h2 className="text-2xl font-romantic font-bold text-white mb-6">
             💕 My Songs
           </h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            {/* Teri Khamoshi Song */}
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="bg-dark-700/50 rounded-lg p-4 border border-romantic-500/20 hover:border-romantic-500/50 transition-all"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-romantic-500 to-purple-500 rounded-lg flex items-center justify-center text-3xl">
-                  🎵
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-bold text-white">Teri Khamoshi</h3>
-                  <p className="text-gray-400 text-sm">Rahul Sapkal</p>
-                  <p className="text-gray-500 text-xs">Emotional Romantic Song</p>
-                </div>
-              </div>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  playSong({
-                    title: 'Teri Khamoshi',
-                    artist: 'Rahul Sapkal',
-                    albumCover: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect fill="%23ec4899" width="300" height="300"/%3E%3Ctext x="150" y="150" font-size="80" text-anchor="middle" dy=".3em" fill="%23ffffff"%3E💕%3C/text%3E%3C/svg%3E',
-                    previewUrl: '/music/teri-khamoshi.mp3',
-                    isCustom: true,
-                  });
-                  setShowSuccess(true);
-                  setTimeout(() => setShowSuccess(false), 3000);
-                }}
-                className="btn-primary w-full mt-4"
-              >
-                <FaMusic className="inline mr-2" />
-                Play This Song
-              </motion.button>
-            </motion.div>
-          </div>
+          
+          {mySongs.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="text-6xl mb-4">🎵</div>
+              <p className="text-gray-400">No songs added yet</p>
+              <p className="text-gray-500 text-sm mt-2">
+                Add MP3 files to <code className="text-romantic-400">frontend/public/music/</code> and update songs.json
+              </p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {mySongs.map((song) => (
+                <motion.div
+                  key={song.id}
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-dark-700/50 rounded-lg p-4 border border-romantic-500/20 hover:border-romantic-500/50 transition-all"
+                >
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className={`w-16 h-16 bg-gradient-to-br ${song.color} rounded-lg flex items-center justify-center text-3xl`}>
+                      {song.emoji}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-white line-clamp-1">{song.title}</h3>
+                      <p className="text-gray-400 text-sm line-clamp-1">{song.artist}</p>
+                      <p className="text-gray-500 text-xs line-clamp-1">{song.description}</p>
+                    </div>
+                  </div>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      playSong({
+                        title: song.title,
+                        artist: song.artist,
+                        albumCover: `data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect fill="%23${song.color.includes('romantic') ? 'ec4899' : 'a855f7'}" width="300" height="300"/%3E%3Ctext x="150" y="150" font-size="80" text-anchor="middle" dy=".3em" fill="%23ffffff"%3E${song.emoji}%3C/text%3E%3C/svg%3E`,
+                        previewUrl: `/music/${song.filename}`,
+                        isCustom: true,
+                      });
+                      setShowSuccess(true);
+                      setTimeout(() => setShowSuccess(false), 3000);
+                    }}
+                    className="btn-primary w-full"
+                  >
+                    <FaMusic className="inline mr-2" />
+                    Play This Song
+                  </motion.button>
+                </motion.div>
+              ))}
+            </div>
+          )}
+          
           <div className="mt-4 bg-romantic-500/10 border border-romantic-500/30 rounded-lg p-4">
-            <p className="text-gray-400 text-sm">
-              📁 <strong>To add more songs:</strong> Copy your MP3 files to <code className="text-romantic-400">frontend/public/music/</code> folder
+            <p className="text-gray-400 text-sm mb-2">
+              📁 <strong>To add more songs:</strong>
             </p>
+            <ol className="text-gray-400 text-sm space-y-1 ml-4">
+              <li>1. Copy MP3 file to <code className="text-romantic-400">frontend/public/music/</code></li>
+              <li>2. Edit <code className="text-romantic-400">frontend/public/music/songs.json</code></li>
+              <li>3. Add new song entry with title, artist, filename, emoji, color</li>
+              <li>4. Refresh page - song will appear automatically! 🎉</li>
+            </ol>
           </div>
         </motion.div>
 

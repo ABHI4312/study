@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "title": "Teri Khamoshi",
+    "artist": "Rahul Sapkal",
+    "description": "Emotional Romantic Song",
+    "filename": "teri-khamoshi.mp3",
+    "emoji": "💕",
+    "color": "from-romantic-500 to-purple-500"
+  },
+  {
+    "id": 2,
+    "title": "Sun Breathe",
+    "artist": "Romantic Melody",
+    "description": "Peaceful & Soothing",
+    "filename": "Sun_breathe.mp3",
+    "emoji": "🌅",
+    "color": "from-purple-500 to-pink-500"
+  }
+]
