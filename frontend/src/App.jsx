@@ -14,6 +14,7 @@ import MemoryDetail from './pages/MemoryDetail';
 import OpenWhen from './pages/OpenWhen';
 import SecretMessage from './pages/SecretMessage';
 import AddMemory from './pages/AddMemory';
+import EditMemory from './pages/EditMemory';
 import SecretLogin from './pages/SecretLogin';
 import SecretDashboard from './pages/SecretDashboard';
 import SurpriseMessages from './pages/SurpriseMessages';
@@ -70,6 +71,7 @@ function App() {
                 <Route path="/" element={<Landing />} />
                 <Route path="/memories" element={<MemoryTimeline />} />
                 <Route path="/memory/:id" element={<MemoryDetail />} />
+                <Route path="/edit-memory/:id" element={<EditMemory />} />
                 <Route path="/open-when" element={<OpenWhen />} />
                 <Route path="/add-open-when" element={<AddOpenWhen />} />
                 <Route path="/secrets" element={<SecretMessage />} />
