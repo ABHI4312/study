@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import Loading from '../components/Loading';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -129,8 +127,6 @@ const ArtDiary = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
-      <Navbar />
-      
       <div className="container mx-auto px-4 py-8 mt-20">
         {/* Header */}
         <motion.div
@@ -501,8 +497,6 @@ const ArtDiary = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
-      <Footer />
     </div>
   );
 };
