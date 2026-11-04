@@ -11,7 +11,7 @@ const memorySchema = new mongoose.Schema(
     description: {
       type: String,
       required: [true, 'Please add a description'],
-      maxlength: [1000, 'Description cannot be more than 1000 characters'],
+      maxlength: [5000, 'Description cannot be more than 5000 characters'],
     },
     date: {
       type: Date,
