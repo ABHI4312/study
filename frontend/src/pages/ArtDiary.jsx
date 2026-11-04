@@ -264,75 +264,107 @@ const ArtDiary = () => {
                 <p className="text-2xl text-gray-500">No art entries yet. Start creating! 🎨</p>
               </div>
             ) : (
-              <div className="flex flex-col items-center min-w-max px-8">
-                {/* Tree Trunk */}
-                <motion.div
-                  initial={{ scaleY: 0 }}
-                  animate={{ scaleY: 1 }}
-                  transition={{ duration: 0.5 }}
-                  className="w-3 h-24 bg-gradient-to-b from-amber-700 to-amber-900 rounded-t-full"
-                />
+              <div className="relative min-h-screen">
+                {/* Background Tree Branches Pattern */}
+                <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-30" style={{ zIndex: 0 }}>
+                  <defs>
+                    <pattern id="tree-pattern" x="0" y="0" width="100%" height="100%">
+                      {/* Main vertical lines */}
+                      {[...Array(Math.ceil(artEntries.length / 3))].map((_, i) => (
+                        <line
+                          key={`v-${i}`}
+                          x1={`${20 + (i % 4) * 25}%`}
+                          y1="0%"
+                          x2={`${20 + (i % 4) * 25}%`}
+                          y2="100%"
+                          stroke="#4ade80"
+                          strokeWidth="3"
+                          opacity="0.5"
+                        />
+                      ))}
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#tree-pattern)" />
+                </svg>
 
-                {/* Main Branches Container */}
-                <div className="relative">
+                {/* Photos arranged in tree structure */}
+                <div className="relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-8 py-16" style={{ zIndex: 1 }}>
                   {artEntries.map((entry, index) => {
-                    const totalEntries = artEntries.length;
-                    const isLeft = index % 2 === 0;
-                    const level = Math.floor(index / 2);
-                    const yOffset = level * 180;
-                    const xOffset = isLeft ? -300 : 300;
+                    const rotations = [-8, 5, -5, 8, -6, 7, -7, 6];
+                    const rotation = rotations[index % rotations.length];
 
                     return (
-                      <div key={entry._id} className="absolute" style={{ top: `${yOffset}px` }}>
-                        {/* Branch Line */}
-                        <motion.div
-                          initial={{ scaleX: 0 }}
-                          animate={{ scaleX: 1 }}
-                          transition={{ duration: 0.5, delay: index * 0.1 }}
-                          className="absolute top-1/2"
-                          style={{
-                            left: isLeft ? 'auto' : '0',
-                            right: isLeft ? '0' : 'auto',
-                            width: '280px',
-                            height: '3px',
-                            background: `linear-gradient(to ${isLeft ? 'left' : 'right'}, rgba(139, 69, 19, 0.8), rgba(101, 67, 33, 0.3))`,
-                            transformOrigin: isLeft ? 'right' : 'left',
-                          }}
-                        />
-
-                        {/* Art Card on Branch */}
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.5, rotate: isLeft ? -20 : 20 }}
-                          animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                          transition={{ duration: 0.5, delay: index * 0.1 + 0.3 }}
-                          whileHover={{ scale: 1.1, rotate: isLeft ? -5 : 5 }}
-                          className="cursor-pointer"
-                          style={{
-                            position: 'absolute',
-                            left: isLeft ? '-300px' : '280px',
-                            top: '-80px',
-                          }}
-                          onClick={() => setSelectedEntry(entry)}
-                        >
-                          <div className="relative group">
-                            {/* Leaf/Flower decoration */}
-                            <div className="absolute -top-3 -right-3 text-3xl animate-pulse">
-                              {entry.isFavorite ? '🌸' : '🍃'}
+                      <motion.div
+                        key={entry._id}
+                        initial={{ opacity: 0, y: -50, rotate: rotation * 2 }}
+                        animate={{ opacity: 1, y: 0, rotate: rotation }}
+                        transition={{
+                          duration: 0.6,
+                          delay: index * 0.15,
+                          type: 'spring',
+                          stiffness: 100,
+                        }}
+                        className="relative flex flex-col items-center"
+                        style={{ zIndex: 10 + index }}
+                      >
+                        {/* Hanging String/Thread */}
+                        <div className="relative mb-4">
+                          {/* Pin/Clip at top */}
+                          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 z-20">
+                            <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-full shadow-lg flex items-center justify-center border-2 border-green-700">
+                              <div className="w-2 h-2 bg-white rounded-full" />
                             </div>
+                          </div>
 
-                            <div className="w-40 h-40 rounded-2xl overflow-hidden shadow-lg shadow-purple-900/30 border-4 border-purple-500/50 group-hover:border-pink-500 transition-all bg-gray-800">
+                          {/* String */}
+                          <div
+                            className="absolute left-1/2 transform -translate-x-1/2 bg-gradient-to-b from-gray-400 to-gray-500"
+                            style={{
+                              width: '2px',
+                              height: '40px',
+                              top: '-40px',
+                            }}
+                          />
+                        </div>
+
+                        {/* Polaroid Photo Card */}
+                        <motion.div
+                          whileHover={{
+                            scale: 1.1,
+                            rotate: 0,
+                            zIndex: 100,
+                            transition: { duration: 0.3 },
+                          }}
+                          className="cursor-pointer group"
+                          onClick={() => setSelectedEntry(entry)}
+                          style={{
+                            rotate: `${rotation}deg`,
+                          }}
+                        >
+                          {/* Polaroid Frame */}
+                          <div className="bg-white p-3 pb-16 shadow-2xl relative rounded-sm">
+                            {/* Favorite badge */}
+                            {entry.isFavorite && (
+                              <div className="absolute -top-3 -right-3 z-20 bg-red-500 rounded-full p-2 shadow-lg animate-pulse">
+                                <span className="text-xl">❤️</span>
+                              </div>
+                            )}
+
+                            {/* Photo */}
+                            <div className="relative w-48 h-48 overflow-hidden bg-gray-200">
                               <img
                                 src={entry.imageUrl}
                                 alt={entry.title}
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                               />
                             </div>
 
-                            <div className="mt-2 bg-gray-900/90 backdrop-blur-sm rounded-lg p-2 border border-gray-700 max-w-[160px]">
-                              <p className="text-xs font-semibold text-gray-100 truncate">
+                            {/* Polaroid Text Area */}
+                            <div className="mt-4 px-2">
+                              <p className="text-gray-800 font-handwriting text-sm font-semibold text-center truncate">
                                 {entry.title}
                               </p>
-                              <p className="text-xs text-gray-400">
+                              <p className="text-gray-500 text-xs text-center mt-1">
                                 {new Date(entry.date).toLocaleDateString('en-US', {
                                   month: 'short',
                                   day: 'numeric',
@@ -340,21 +372,67 @@ const ArtDiary = () => {
                                 })}
                               </p>
                             </div>
+
+                            {/* Decorative elements */}
+                            <div className="absolute bottom-2 right-2 opacity-50">
+                              {entry.artType === 'painting' && '🎨'}
+                              {entry.artType === 'drawing' && '✏️'}
+                              {entry.artType === 'digital-art' && '💻'}
+                              {entry.artType === 'sketch' && '📝'}
+                              {entry.artType === 'craft' && '✂️'}
+                              {entry.artType === 'other' && '🖼️'}
+                            </div>
                           </div>
+
+                          {/* Shadow effect */}
+                          <div className="absolute inset-0 bg-black opacity-5 rounded-sm transform translate-y-1 -z-10" />
                         </motion.div>
-                      </div>
+
+                        {/* Decorative leaves/flowers around some photos */}
+                        {index % 3 === 0 && (
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: index * 0.15 + 0.5 }}
+                            className="absolute -top-6 -left-6 text-4xl pointer-events-none"
+                            style={{ rotate: `${-rotation}deg` }}
+                          >
+                            🌿
+                          </motion.div>
+                        )}
+                        {index % 4 === 0 && (
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: index * 0.15 + 0.6 }}
+                            className="absolute -top-4 -right-6 text-3xl pointer-events-none"
+                            style={{ rotate: `${rotation}deg` }}
+                          >
+                            🌸
+                          </motion.div>
+                        )}
+                        {index % 5 === 0 && (
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: index * 0.15 + 0.7 }}
+                            className="absolute -bottom-4 -left-4 text-3xl pointer-events-none"
+                            style={{ rotate: `${-rotation * 1.5}deg` }}
+                          >
+                            🍃
+                          </motion.div>
+                        )}
+                      </motion.div>
                     );
                   })}
                 </div>
 
-                {/* Tree Base/Ground */}
-                <motion.div
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ duration: 0.8, delay: 0.5 }}
-                  className="mt-8 w-64 h-4 bg-gradient-to-r from-green-900 via-green-700 to-green-900 rounded-full"
-                  style={{ marginTop: `${Math.ceil(artEntries.length / 2) * 180 + 50}px` }}
-                />
+                {/* Decorative elements at corners */}
+                <div className="absolute top-8 left-8 text-6xl opacity-40 pointer-events-none">🌳</div>
+                <div className="absolute top-8 right-8 text-6xl opacity-40 pointer-events-none">🌳</div>
+                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-7xl opacity-40 pointer-events-none">
+                  🌲
+                </div>
               </div>
             )}
           </div>
