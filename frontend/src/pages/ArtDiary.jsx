@@ -11,7 +11,7 @@ const ArtDiary = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState(null);
   const [filter, setFilter] = useState('all');
-  const [viewMode, setViewMode] = useState('grid'); // 'grid', 'tree', or 'wall'
+  const [viewMode, setViewMode] = useState('grid'); // 'grid', 'tree', 'wall', 'heart', or 'hexagon'
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
@@ -173,7 +173,7 @@ const ArtDiary = () => {
         </div>
 
         {/* View Mode Toggle */}
-        <div className="flex justify-center gap-3 mb-6">
+        <div className="flex flex-wrap justify-center gap-3 mb-6">
           <button
             onClick={() => setViewMode('grid')}
             className={`px-6 py-2 rounded-full font-medium transition-all ${
@@ -182,7 +182,17 @@ const ArtDiary = () => {
                 : 'bg-gray-800/80 text-gray-300 hover:bg-gray-700 border border-gray-700'
             }`}
           >
-            🖼️ Grid View
+            🖼️ Grid
+          </button>
+          <button
+            onClick={() => setViewMode('hexagon')}
+            className={`px-6 py-2 rounded-full font-medium transition-all ${
+              viewMode === 'hexagon'
+                ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/50'
+                : 'bg-gray-800/80 text-gray-300 hover:bg-gray-700 border border-gray-700'
+            }`}
+          >
+            🐝 Honeycomb
           </button>
           <button
             onClick={() => setViewMode('tree')}
@@ -192,7 +202,7 @@ const ArtDiary = () => {
                 : 'bg-gray-800/80 text-gray-300 hover:bg-gray-700 border border-gray-700'
             }`}
           >
-            🌳 Tree View
+            🌳 Tree
           </button>
           <button
             onClick={() => setViewMode('wall')}
@@ -202,7 +212,17 @@ const ArtDiary = () => {
                 : 'bg-gray-800/80 text-gray-300 hover:bg-gray-700 border border-gray-700'
             }`}
           >
-            🎭 Gallery Wall
+            🎭 Gallery
+          </button>
+          <button
+            onClick={() => setViewMode('heart')}
+            className={`px-6 py-2 rounded-full font-medium transition-all ${
+              viewMode === 'heart'
+                ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/50'
+                : 'bg-gray-800/80 text-gray-300 hover:bg-gray-700 border border-gray-700'
+            }`}
+          >
+            ❤️ Heart
           </button>
         </div>
 
@@ -577,6 +597,326 @@ const ArtDiary = () => {
                 {/* Decorative elements */}
                 <div className="absolute bottom-8 left-8 text-6xl opacity-20">🎨</div>
                 <div className="absolute bottom-8 right-8 text-6xl opacity-20">🖼️</div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Heart Collage View */}
+        {viewMode === 'heart' && (
+          <div className="relative py-12">
+            {artEntries.length === 0 ? (
+              <div className="text-center py-16">
+                <p className="text-2xl text-gray-500">No art entries yet. Start creating! 🎨</p>
+              </div>
+            ) : (
+              <div className="relative flex items-center justify-center min-h-screen px-4">
+                {/* Floating hearts background */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                  {[...Array(15)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute text-pink-500/20"
+                      initial={{ y: '100vh', x: `${Math.random() * 100}vw` }}
+                      animate={{
+                        y: '-10vh',
+                        x: `${Math.random() * 100}vw`,
+                      }}
+                      transition={{
+                        duration: 10 + Math.random() * 10,
+                        repeat: Infinity,
+                        delay: Math.random() * 5,
+                      }}
+                      style={{ fontSize: `${20 + Math.random() * 40}px` }}
+                    >
+                      ❤️
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Heart shape container */}
+                <div className="relative w-full max-w-5xl aspect-square">
+                  {/* Heart outline glow */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1 }}
+                    className="absolute inset-0 blur-2xl opacity-50"
+                    style={{
+                      background: 'radial-gradient(circle, rgba(236,72,153,0.3) 0%, transparent 70%)',
+                    }}
+                  />
+
+                  {/* Photos arranged in heart shape */}
+                  {artEntries.map((entry, index) => {
+                    // Heart shape mathematical positioning
+                    const totalPhotos = artEntries.length;
+                    const angle = (index / totalPhotos) * Math.PI * 2;
+                    
+                    // Heart curve equations (parametric)
+                    const t = angle;
+                    const heartX = 16 * Math.pow(Math.sin(t), 3);
+                    const heartY = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+                    
+                    // Scale and position
+                    const scale = 15; // Adjust size
+                    const centerX = 50;
+                    const centerY = 50;
+                    
+                    const posX = centerX + (heartX * scale) / 10;
+                    const posY = centerY + (heartY * scale) / 10;
+
+                    // Random rotations for natural look
+                    const rotations = [-15, -10, -5, 0, 5, 10, 15, -12, 8, -8, 12, -18, 18];
+                    const rotation = rotations[index % rotations.length];
+
+                    // Random sizes
+                    const sizes = ['w-24 h-24', 'w-28 h-28', 'w-32 h-32', 'w-20 h-20'];
+                    const sizeClass = sizes[index % sizes.length];
+
+                    return (
+                      <motion.div
+                        key={entry._id}
+                        initial={{ opacity: 0, scale: 0, rotate: rotation * 2 }}
+                        animate={{ opacity: 1, scale: 1, rotate: rotation }}
+                        transition={{
+                          duration: 0.8,
+                          delay: index * 0.05,
+                          type: 'spring',
+                          stiffness: 100,
+                        }}
+                        className="absolute cursor-pointer"
+                        style={{
+                          left: `${posX}%`,
+                          top: `${posY}%`,
+                          transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
+                          zIndex: 10 + index,
+                        }}
+                        whileHover={{
+                          scale: 1.3,
+                          rotate: 0,
+                          zIndex: 100,
+                          transition: { duration: 0.3 },
+                        }}
+                        onClick={() => setSelectedEntry(entry)}
+                      >
+                        {/* Polaroid style photo */}
+                        <div className={`${sizeClass} bg-white p-2 pb-6 shadow-2xl rounded-sm group`}>
+                          {/* Favorite badge */}
+                          {entry.isFavorite && (
+                            <div className="absolute -top-2 -right-2 z-20 bg-red-500 rounded-full p-1 shadow-lg animate-pulse">
+                              <span className="text-sm">❤️</span>
+                            </div>
+                          )}
+
+                          {/* Photo */}
+                          <div className="relative w-full h-full overflow-hidden bg-gray-200">
+                            <img
+                              src={entry.imageUrl}
+                              alt={entry.title}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                            />
+                          </div>
+
+                          {/* Title on polaroid bottom */}
+                          <div className="absolute bottom-1 left-0 right-0 px-1">
+                            <p className="text-gray-800 text-xs font-handwriting text-center truncate">
+                              {entry.title}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Shadow */}
+                        <div className="absolute inset-0 bg-black/20 blur-md -z-10 transform translate-y-1" />
+                      </motion.div>
+                    );
+                  })}
+
+                  {/* Center text */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1, delay: 0.5 }}
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none"
+                  >
+                    <div className="text-6xl mb-2">❤️</div>
+                    <p className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400 text-2xl font-bold">
+                      Art with Love
+                    </p>
+                    <p className="text-gray-400 text-sm mt-2">
+                      {artEntries.length} precious memories
+                    </p>
+                  </motion.div>
+                </div>
+
+                {/* Decorative elements */}
+                <div className="absolute top-8 left-8 text-6xl animate-pulse">💕</div>
+                <div className="absolute top-8 right-8 text-6xl animate-pulse" style={{ animationDelay: '1s' }}>
+                  💖
+                </div>
+                <div className="absolute bottom-8 left-1/4 text-5xl animate-pulse" style={{ animationDelay: '2s' }}>
+                  💗
+                </div>
+                <div className="absolute bottom-8 right-1/4 text-5xl animate-pulse" style={{ animationDelay: '1.5s' }}>
+                  💝
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Hexagon/Honeycomb View */}
+        {viewMode === 'hexagon' && (
+          <div className="relative py-12">
+            {artEntries.length === 0 ? (
+              <div className="text-center py-16">
+                <p className="text-2xl text-gray-500">No art entries yet. Start creating! 🎨</p>
+              </div>
+            ) : (
+              <div className="relative px-8">
+                {/* Background honeycomb pattern */}
+                <div className="absolute inset-0 opacity-5">
+                  <svg width="100%" height="100%">
+                    <defs>
+                      <pattern id="hexagons" width="100" height="87" patternUnits="userSpaceOnUse">
+                        <polygon
+                          points="50,0 93.3,25 93.3,75 50,100 6.7,75 6.7,25"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        />
+                      </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#hexagons)" />
+                  </svg>
+                </div>
+
+                {/* Hexagon grid layout */}
+                <div className="relative flex flex-wrap justify-center gap-4 py-8">
+                  {artEntries.map((entry, index) => {
+                    // Calculate hexagon positioning
+                    const hexSize = 140; // Size of each hexagon
+                    const row = Math.floor(index / 5);
+                    const col = index % 5;
+                    const offsetX = col * (hexSize * 0.75);
+                    const offsetY = row * (hexSize * 0.87) + (col % 2 === 1 ? hexSize * 0.435 : 0);
+
+                    return (
+                      <motion.div
+                        key={entry._id}
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{
+                          duration: 0.5,
+                          delay: index * 0.05,
+                          type: 'spring',
+                        }}
+                        className="relative cursor-pointer group"
+                        style={{
+                          width: `${hexSize}px`,
+                          height: `${hexSize}px`,
+                          margin: '10px',
+                        }}
+                        whileHover={{ scale: 1.15, zIndex: 50 }}
+                        onClick={() => setSelectedEntry(entry)}
+                      >
+                        {/* Hexagon clip path container */}
+                        <div
+                          className="relative w-full h-full overflow-hidden"
+                          style={{
+                            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                          }}
+                        >
+                          {/* Hexagon border/frame */}
+                          <div
+                            className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 p-1"
+                            style={{
+                              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                            }}
+                          >
+                            {/* Inner hexagon with photo */}
+                            <div
+                              className="w-full h-full overflow-hidden bg-gray-800"
+                              style={{
+                                clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                              }}
+                            >
+                              <img
+                                src={entry.imageUrl}
+                                alt={entry.title}
+                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                              />
+
+                              {/* Overlay with info on hover */}
+                              <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-4">
+                                <h3 className="text-white font-bold text-sm text-center mb-1">
+                                  {entry.title}
+                                </h3>
+                                <p className="text-gray-300 text-xs text-center">
+                                  {new Date(entry.date).toLocaleDateString('en-US', {
+                                    month: 'short',
+                                    year: 'numeric',
+                                  })}
+                                </p>
+                                {entry.isFavorite && (
+                                  <div className="mt-2 text-2xl animate-pulse">❤️</div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Favorite badge */}
+                          {entry.isFavorite && (
+                            <div className="absolute top-2 right-2 z-20 bg-red-500 rounded-full p-1 shadow-lg group-hover:scale-125 transition-transform">
+                              <span className="text-xs">❤️</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Glow effect */}
+                        <div
+                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity blur-xl -z-10"
+                          style={{
+                            background: 'radial-gradient(circle, rgba(168,85,247,0.4) 0%, transparent 70%)',
+                          }}
+                        />
+                      </motion.div>
+                    );
+                  })}
+                </div>
+
+                {/* Decorative bees */}
+                <motion.div
+                  className="absolute top-16 right-16 text-5xl"
+                  animate={{
+                    x: [0, 20, 0],
+                    y: [0, -20, 0],
+                    rotate: [0, 10, 0],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                >
+                  🐝
+                </motion.div>
+                <motion.div
+                  className="absolute bottom-16 left-16 text-4xl"
+                  animate={{
+                    x: [0, -15, 0],
+                    y: [0, 15, 0],
+                    rotate: [0, -10, 0],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                    delay: 1,
+                  }}
+                >
+                  🐝
+                </motion.div>
               </div>
             )}
           </div>
