@@ -21,6 +21,7 @@ import SurpriseMessages from './pages/SurpriseMessages';
 import AddSurprise from './pages/AddSurprise';
 import ChooseMusic from './pages/ChooseMusic';
 import AddOpenWhen from './pages/AddOpenWhen';
+import ArtDiary from './pages/ArtDiary';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -79,6 +80,7 @@ function App() {
                 <Route path="/surprises" element={<SurpriseMessages />} />
                 <Route path="/add-surprise" element={<AddSurprise />} />
                 <Route path="/choose-music" element={<ChooseMusic />} />
+                <Route path="/art-diary" element={<ArtDiary />} />
                 <Route path="/secret-login" element={<SecretLogin />} />
                 <Route path="/secret-portal" element={<SecretLogin />} />
                 <Route

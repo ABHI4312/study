@@ -12,6 +12,7 @@ const Navbar = () => {
     { path: '/open-when', label: 'Open When' },
     { path: '/surprises', label: 'Surprises' },
     { path: '/secrets', label: 'Secrets' },
+    { path: '/art-diary', label: '🎨 Art Diary' },
     { path: '/choose-music', label: '🎵 Music' },
     { path: '/add-memory', label: 'Add Memory' },
   ];
