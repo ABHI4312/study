@@ -11,6 +11,9 @@ const ArtDiary = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState(null);
   const [filter, setFilter] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -25,17 +28,22 @@ const ArtDiary = () => {
 
   useEffect(() => {
     fetchArtEntries();
-  }, [filter]);
+  }, [filter, currentPage]);
 
   const fetchArtEntries = async () => {
     try {
       setLoading(true);
-      const params = {};
+      const params = {
+        page: currentPage,
+        limit: 100, // Increased to 100 to show more entries
+      };
       if (filter === 'favorites') params.favorite = 'true';
       if (filter !== 'all' && filter !== 'favorites') params.artType = filter;
 
       const response = await axios.get(`${API_URL}/art-diary`, { params });
       setArtEntries(response.data.data);
+      setTotalPages(response.data.totalPages);
+      setTotalCount(response.data.total);
     } catch (error) {
       console.error('Error fetching art entries:', error);
     } finally {
@@ -89,6 +97,7 @@ const ArtDiary = () => {
       setImageFile(null);
       setImagePreview(null);
       setShowAddForm(false);
+      setCurrentPage(1); // Reset to first page
       fetchArtEntries();
     } catch (error) {
       console.error('Error creating art entry:', error);
@@ -138,6 +147,11 @@ const ArtDiary = () => {
             🎨 Chuimui's Art Diary
           </h1>
           <p className="text-gray-300 text-lg">A collection of beautiful creations</p>
+          {totalCount > 0 && (
+            <p className="text-gray-400 text-sm mt-2">
+              {totalCount} artwork{totalCount !== 1 ? 's' : ''} in collection
+            </p>
+          )}
         </motion.div>
 
         {/* Filters */}
@@ -210,6 +224,43 @@ const ArtDiary = () => {
         {artEntries.length === 0 && (
           <div className="text-center py-16">
             <p className="text-2xl text-gray-500">No art entries yet. Start creating! 🎨</p>
+          </div>
+        )}
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-4 mt-8 mb-4">
+            <button
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}
+              className="px-6 py-2 bg-gray-800 border border-gray-700 text-gray-300 rounded-full font-medium hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            >
+              ← Previous
+            </button>
+            
+            <div className="flex items-center gap-2">
+              {[...Array(totalPages)].map((_, index) => (
+                <button
+                  key={index + 1}
+                  onClick={() => setCurrentPage(index + 1)}
+                  className={`w-10 h-10 rounded-full font-medium transition-all ${
+                    currentPage === index + 1
+                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/50'
+                      : 'bg-gray-800 border border-gray-700 text-gray-300 hover:bg-gray-700'
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              disabled={currentPage === totalPages}
+              className="px-6 py-2 bg-gray-800 border border-gray-700 text-gray-300 rounded-full font-medium hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            >
+              Next →
+            </button>
           </div>
         )}
       </div>
