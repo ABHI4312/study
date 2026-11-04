@@ -128,7 +128,7 @@ const ArtDiary = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
       <Navbar />
       
       <div className="container mx-auto px-4 py-8 mt-20">
@@ -138,10 +138,10 @@ const ArtDiary = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-2">
+          <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-2">
             🎨 Chuimui's Art Diary
           </h1>
-          <p className="text-gray-600 text-lg">A collection of beautiful creations</p>
+          <p className="text-gray-300 text-lg">A collection of beautiful creations</p>
         </motion.div>
 
         {/* Filters */}
@@ -152,8 +152,8 @@ const ArtDiary = () => {
               onClick={() => setFilter(type)}
               className={`px-6 py-2 rounded-full font-medium transition-all ${
                 filter === type
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:shadow-md'
+                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/50'
+                  : 'bg-gray-800/80 text-gray-300 hover:bg-gray-700 hover:shadow-md border border-gray-700'
               }`}
             >
               {type.replace('-', ' ').charAt(0).toUpperCase() + type.slice(1).replace('-', ' ')}
@@ -165,7 +165,7 @@ const ArtDiary = () => {
         <div className="flex justify-center mb-8">
           <button
             onClick={() => setShowAddForm(true)}
-            className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold hover:scale-105 transition-transform shadow-lg"
+            className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold hover:scale-105 transition-transform shadow-lg shadow-purple-500/50"
           >
             ✨ Add New Art
           </button>
@@ -181,7 +181,7 @@ const ArtDiary = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 whileHover={{ y: -5 }}
-                className="bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer group relative"
+                className="bg-gray-800/90 backdrop-blur-sm rounded-2xl shadow-lg shadow-purple-900/20 overflow-hidden cursor-pointer group relative border border-gray-700/50 hover:border-purple-500/50 transition-all"
                 onClick={() => setSelectedEntry(entry)}
               >
                 <div className="relative aspect-square overflow-hidden">
@@ -191,14 +191,14 @@ const ArtDiary = () => {
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   />
                   {entry.isFavorite && (
-                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full p-2">
+                    <div className="absolute top-3 right-3 bg-gray-900/80 backdrop-blur-sm rounded-full p-2">
                       <span className="text-2xl">❤️</span>
                     </div>
                   )}
                 </div>
                 <div className="p-4">
-                  <h3 className="font-bold text-lg text-gray-800 mb-1 truncate">{entry.title}</h3>
-                  <p className="text-sm text-gray-500">
+                  <h3 className="font-bold text-lg text-gray-100 mb-1 truncate">{entry.title}</h3>
+                  <p className="text-sm text-gray-400">
                     {new Date(entry.date).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
@@ -213,7 +213,7 @@ const ArtDiary = () => {
 
         {artEntries.length === 0 && (
           <div className="text-center py-16">
-            <p className="text-2xl text-gray-400">No art entries yet. Start creating! 🎨</p>
+            <p className="text-2xl text-gray-500">No art entries yet. Start creating! 🎨</p>
           </div>
         )}
       </div>
@@ -225,27 +225,27 @@ const ArtDiary = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             onClick={() => setShowAddForm(false)}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-3xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              className="bg-gray-900 border border-gray-700 rounded-3xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-6">
+              <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-6">
                 Add New Art
               </h2>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Image Upload */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     Upload Image *
                   </label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-purple-500 transition-colors">
+                  <div className="border-2 border-dashed border-gray-700 rounded-xl p-6 text-center hover:border-purple-500 transition-colors bg-gray-800/50">
                     {imagePreview ? (
                       <div className="relative">
                         <img
@@ -280,7 +280,7 @@ const ArtDiary = () => {
                         >
                           Choose Image
                         </label>
-                        <p className="text-sm text-gray-500 mt-2">
+                        <p className="text-sm text-gray-400 mt-2">
                           JPG, PNG, GIF, WEBP (Max 10MB)
                         </p>
                       </div>
@@ -290,14 +290,14 @@ const ArtDiary = () => {
 
                 {/* Title */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     Title *
                   </label>
                   <input
                     type="text"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     placeholder="Give your art a title..."
                     required
                   />
@@ -305,13 +305,13 @@ const ArtDiary = () => {
 
                 {/* Description */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     Description
                   </label>
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     rows="4"
                     placeholder="Tell us about this artwork..."
                   />
@@ -320,25 +320,25 @@ const ArtDiary = () => {
                 {/* Date and Art Type */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
                       Date *
                     </label>
                     <input
                       type="date"
                       value={formData.date}
                       onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
                       Art Type
                     </label>
                     <select
                       value={formData.artType}
                       onChange={(e) => setFormData({ ...formData, artType: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     >
                       <option value="drawing">Drawing</option>
                       <option value="painting">Painting</option>
@@ -352,14 +352,14 @@ const ArtDiary = () => {
 
                 {/* Tags */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     Tags (comma separated)
                   </label>
                   <input
                     type="text"
                     value={formData.tags}
                     onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     placeholder="colorful, abstract, nature..."
                   />
                 </div>
@@ -370,10 +370,10 @@ const ArtDiary = () => {
                     type="checkbox"
                     checked={formData.isFavorite}
                     onChange={(e) => setFormData({ ...formData, isFavorite: e.target.checked })}
-                    className="w-5 h-5 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
+                    className="w-5 h-5 text-purple-600 bg-gray-800 border-gray-700 rounded focus:ring-2 focus:ring-purple-500"
                     id="favorite"
                   />
-                  <label htmlFor="favorite" className="ml-3 text-sm font-medium text-gray-700">
+                  <label htmlFor="favorite" className="ml-3 text-sm font-medium text-gray-300">
                     Mark as favorite ❤️
                   </label>
                 </div>
@@ -383,14 +383,14 @@ const ArtDiary = () => {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold hover:scale-105 transition-transform shadow-lg shadow-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {submitting ? 'Uploading...' : '✨ Add to Diary'}
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowAddForm(false)}
-                    className="px-6 py-3 bg-gray-200 text-gray-700 rounded-full font-semibold hover:bg-gray-300 transition-colors"
+                    className="px-6 py-3 bg-gray-800 border border-gray-700 text-gray-300 rounded-full font-semibold hover:bg-gray-700 transition-colors"
                   >
                     Cancel
                   </button>
@@ -408,23 +408,23 @@ const ArtDiary = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             onClick={() => setSelectedEntry(null)}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-3xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+              className="bg-gray-900 border border-gray-700 rounded-3xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex justify-between items-start mb-6">
-                <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+                <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
                   {selectedEntry.title}
                 </h2>
                 <button
                   onClick={() => setSelectedEntry(null)}
-                  className="text-gray-500 hover:text-gray-700 text-2xl"
+                  className="text-gray-400 hover:text-gray-200 text-2xl"
                 >
                   ✕
                 </button>
@@ -438,8 +438,8 @@ const ArtDiary = () => {
 
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm text-gray-500 font-medium">Date</p>
-                  <p className="text-lg">
+                  <p className="text-sm text-gray-400 font-medium">Date</p>
+                  <p className="text-lg text-gray-200">
                     {new Date(selectedEntry.date).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
@@ -450,26 +450,26 @@ const ArtDiary = () => {
 
                 {selectedEntry.description && (
                   <div>
-                    <p className="text-sm text-gray-500 font-medium">Description</p>
-                    <p className="text-lg text-gray-700">{selectedEntry.description}</p>
+                    <p className="text-sm text-gray-400 font-medium">Description</p>
+                    <p className="text-lg text-gray-200">{selectedEntry.description}</p>
                   </div>
                 )}
 
                 <div>
-                  <p className="text-sm text-gray-500 font-medium">Art Type</p>
-                  <span className="inline-block px-4 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
+                  <p className="text-sm text-gray-400 font-medium">Art Type</p>
+                  <span className="inline-block px-4 py-1 bg-purple-900/50 text-purple-300 rounded-full text-sm font-medium border border-purple-700">
                     {selectedEntry.artType.replace('-', ' ').toUpperCase()}
                   </span>
                 </div>
 
                 {selectedEntry.tags && selectedEntry.tags.length > 0 && (
                   <div>
-                    <p className="text-sm text-gray-500 font-medium mb-2">Tags</p>
+                    <p className="text-sm text-gray-400 font-medium mb-2">Tags</p>
                     <div className="flex flex-wrap gap-2">
                       {selectedEntry.tags.map((tag, index) => (
                         <span
                           key={index}
-                          className="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-sm"
+                          className="px-3 py-1 bg-pink-900/50 text-pink-300 rounded-full text-sm border border-pink-700"
                         >
                           #{tag}
                         </span>
@@ -484,14 +484,14 @@ const ArtDiary = () => {
                     className={`flex-1 px-6 py-3 rounded-full font-semibold transition-all ${
                       selectedEntry.isFavorite
                         ? 'bg-red-500 text-white hover:bg-red-600'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        : 'bg-gray-800 border border-gray-700 text-gray-300 hover:bg-gray-700'
                     }`}
                   >
                     {selectedEntry.isFavorite ? '❤️ Unfavorite' : '🤍 Add to Favorites'}
                   </button>
                   <button
                     onClick={() => handleDelete(selectedEntry._id)}
-                    className="px-6 py-3 bg-red-500 text-white rounded-full font-semibold hover:bg-red-600 transition-colors"
+                    className="px-6 py-3 bg-red-500/90 text-white rounded-full font-semibold hover:bg-red-600 transition-colors"
                   >
                     🗑️ Delete
                   </button>
