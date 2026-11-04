@@ -11,7 +11,7 @@ const ArtDiary = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState(null);
   const [filter, setFilter] = useState('all');
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'tree'
+  const [viewMode, setViewMode] = useState('grid'); // 'grid', 'tree', or 'wall'
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
@@ -193,6 +193,16 @@ const ArtDiary = () => {
             }`}
           >
             🌳 Tree View
+          </button>
+          <button
+            onClick={() => setViewMode('wall')}
+            className={`px-6 py-2 rounded-full font-medium transition-all ${
+              viewMode === 'wall'
+                ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/50'
+                : 'bg-gray-800/80 text-gray-300 hover:bg-gray-700 border border-gray-700'
+            }`}
+          >
+            🎭 Gallery Wall
           </button>
         </div>
 
@@ -433,6 +443,140 @@ const ArtDiary = () => {
                 <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-7xl opacity-40 pointer-events-none">
                   🌲
                 </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Gallery Wall View */}
+        {viewMode === 'wall' && (
+          <div className="relative py-12">
+            {artEntries.length === 0 ? (
+              <div className="text-center py-16">
+                <p className="text-2xl text-gray-500">No art entries yet. Start creating! 🎨</p>
+              </div>
+            ) : (
+              <div className="relative px-8">
+                {/* Wall texture background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 opacity-60" />
+                
+                {/* Spotlight effects */}
+                <div className="absolute top-0 left-1/4 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl" />
+                <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl" />
+
+                {/* Masonry layout with varied sizes */}
+                <div className="relative columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
+                  {artEntries.map((entry, index) => {
+                    // Vary the sizes
+                    const sizes = ['small', 'medium', 'large', 'medium', 'small', 'large'];
+                    const size = sizes[index % sizes.length];
+                    
+                    const sizeClasses = {
+                      small: 'h-48',
+                      medium: 'h-64',
+                      large: 'h-80',
+                    };
+
+                    const frames = [
+                      'border-8 border-amber-900 shadow-xl',
+                      'border-[12px] border-gray-800 shadow-2xl',
+                      'border-4 border-white shadow-lg',
+                      'border-6 border-purple-900 shadow-xl',
+                      'border-[10px] border-pink-900 shadow-2xl',
+                    ];
+                    const frameStyle = frames[index % frames.length];
+
+                    return (
+                      <motion.div
+                        key={entry._id}
+                        initial={{ opacity: 0, scale: 0.8, y: 50 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        transition={{
+                          duration: 0.5,
+                          delay: index * 0.1,
+                          type: 'spring',
+                        }}
+                        className="break-inside-avoid mb-6"
+                      >
+                        <motion.div
+                          whileHover={{
+                            scale: 1.05,
+                            zIndex: 50,
+                            transition: { duration: 0.3 },
+                          }}
+                          className="cursor-pointer group relative"
+                          onClick={() => setSelectedEntry(entry)}
+                        >
+                          {/* Frame with artwork */}
+                          <div className={`relative ${frameStyle} bg-gray-900 rounded-sm overflow-hidden`}>
+                            {/* Gallery light effect */}
+                            <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-24 h-8 bg-gradient-to-b from-yellow-300/30 to-transparent rounded-full blur-xl group-hover:from-yellow-300/50 transition-all" />
+
+                            {/* Photo */}
+                            <div className={`relative ${sizeClasses[size]} overflow-hidden bg-gray-800`}>
+                              <img
+                                src={entry.imageUrl}
+                                alt={entry.title}
+                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                              />
+                              
+                              {/* Overlay on hover */}
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div className="absolute bottom-4 left-4 right-4">
+                                  <h3 className="text-white font-bold text-lg mb-1 drop-shadow-lg">
+                                    {entry.title}
+                                  </h3>
+                                  <p className="text-gray-300 text-sm drop-shadow-md">
+                                    {new Date(entry.date).toLocaleDateString('en-US', {
+                                      month: 'long',
+                                      day: 'numeric',
+                                      year: 'numeric',
+                                    })}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Favorite badge */}
+                              {entry.isFavorite && (
+                                <div className="absolute top-3 right-3 z-20 bg-red-500/90 backdrop-blur-sm rounded-full p-2 shadow-lg">
+                                  <span className="text-xl">❤️</span>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Bottom nameplate */}
+                            <div className="bg-gradient-to-r from-amber-100 to-amber-50 p-3 border-t-2 border-amber-800">
+                              <p className="text-gray-800 font-serif text-sm italic text-center truncate">
+                                "{entry.title}"
+                              </p>
+                              <div className="flex justify-between items-center mt-1">
+                                <span className="text-xs text-gray-600">
+                                  {entry.artType.replace('-', ' ').toUpperCase()}
+                                </span>
+                                <span className="text-xs text-gray-600">
+                                  {new Date(entry.date).getFullYear()}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Wall mounting nails/screws */}
+                          <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-gray-700 rounded-full shadow-md border border-gray-600" />
+                          
+                          {/* Shadow on wall */}
+                          <div className="absolute inset-0 bg-black/30 blur-xl -z-10 transform translate-y-2 scale-95" />
+                        </motion.div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+
+                {/* Gallery floor/baseboard */}
+                <div className="relative mt-16 h-4 bg-gradient-to-b from-amber-900 to-amber-950 shadow-inner" />
+                
+                {/* Decorative elements */}
+                <div className="absolute bottom-8 left-8 text-6xl opacity-20">🎨</div>
+                <div className="absolute bottom-8 right-8 text-6xl opacity-20">🖼️</div>
               </div>
             )}
           </div>
